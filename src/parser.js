@@ -12,7 +12,7 @@ module.exports = {
             trim: Joi.boolean(),
             stripNullorEmpty: Joi.boolean()
         }).allow(null),
-        payload: Joi.boolean(),
+        body: Joi.boolean(),
         merge: Joi.boolean()
     }),
     __DEFAULTS: {
@@ -21,8 +21,8 @@ module.exports = {
             trim: true,
             stripNullorEmpty: true
         },
-        payload: false,
-        merge: true
+        body: false,
+        merge: false
     },
     isObject: function (obj) {
         if (obj && obj.toString && obj.toString() === '[object Object]')
@@ -73,12 +73,12 @@ module.exports = {
         if (opts.sanitizer) {
             body = this.sanitize(body, opts.sanitizer);
         }
-        
-        if (opts.payload) {
+
+        if (opts.body) {
+            request.body = body;
+        } else {
             request.payload = body;
         }
-
-        request.body = body;
 
     }
 }

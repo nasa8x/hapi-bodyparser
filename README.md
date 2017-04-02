@@ -18,8 +18,8 @@ options: {
         trim: true, // remove first || end white space of String
         stripNullorEmpty: true // remove property when Null or Empty
     },        
-    merge: true, // merge querystring into body
-    payload: false // If is true, payload is parser-like body
+    merge: false, // merge querystring into body
+    body: false // If false: request.payload is default parsed | if true request.body is parsed
 }
 
 ```
@@ -38,8 +38,8 @@ server.register([{
         //     trim: true,
         //     stripNullorEmpty: true 
         // },
-        // merge: true, 
-        // payload: false 
+        // merge: false, 
+        // body: false 
     }
 }], function (err) {
     // Insert your preferred error handling here...
