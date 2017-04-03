@@ -1,6 +1,6 @@
 {
   "name": "hapi-bodyparser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hapi.js body parsing plugin",
   "main": "src/main.js",
   "scripts": {

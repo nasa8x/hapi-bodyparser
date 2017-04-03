@@ -1,6 +1,6 @@
 Hapi.js body parsing plugin support merge querystring, sub objects and sanitizer.
 
-Parse incoming request bodies in a plugin before your handlers, available under the request.body || request.payload property.
+Parse incoming request bodies in a plugin before your handlers, available under the request.payload (body: true --> request.body) property.
 
 
 Install via NPM
@@ -58,8 +58,114 @@ server.route({
       body: { merge: false, sanitizer: { stripNullorEmpty: false } }
     },
     handler: function (request, reply) {
-      reply(request.body);
+      reply(request.payload);
     }
   }
 });
 ```
+
+Parsing sub object for validate dynamic object keys name
+```js
+server.route({
+        method: 'POST',
+        path: '/api/post/fetch',
+        config: {
+
+            auth: {
+                strategy: 'session',
+                mode: 'try'
+            },
+
+            validate: {
+                payload: {
+                    limit: Joi.number(),
+                    offset: Joi.number(),                                       
+                    sort: Joi.object().pattern(/.*/, Joi.alternatives().try(Joi.number(), Joi.boolean(), Joi.string())),                   
+                    search: Joi.string().allow('')
+                }
+            },            
+
+            handler: (request, reply) => {
+                var _uid = request.auth.credentials._id;
+                var _limit = request.payload.limit;
+                var _offset = request.payload.offset;
+                var _sort = request.payload.sort; 
+                var _kwd = request.payload.search;
+                var _condition = [{ _uid: _uid }];
+
+                if(_kwd.length>0){
+                    _condition.push({
+                        $or: [
+                            { tl: new RegExp(_kwd, "ig") },
+                            { desc: new RegExp(_kwd, "ig") }                            
+                        ]
+                    })
+                }
+                             
+
+                Post.paginate({ $and: _condition }, {
+                    offset: _offset,
+                    limit: _limit,                    
+                    sort: _sort
+                },
+                    function (err, result) {
+
+                        if (result) {
+                            reply({
+                                total: result.total,
+                                rows: result.docs
+                            });
+                        } else {
+                            reply({ total: 0, rows: [] });
+                        }
+
+                    });
+
+            }
+        }
+});
+```
+
+With option `merge: true`, merge querystring into payload (body).
+
+```js
+server.route({
+  method: 'POST',
+  path: '/api/post/fetch?abc=1',
+  config: {
+    plugins: {
+      body: { merge: true }
+    },
+    handler: function (request, reply) {
+      reply(request.payload);
+      // return {abc: 1, ...}
+    }
+  }
+});
+```
+
+Option sanitizer help clean object properties.
+
+```js
+// with default options: trim: true and stripNullorEmpty: true
+{
+    a: '  Hello  ',
+    b: '',
+    c: null,
+    d: 'World   ',
+    e: {
+        a: null,
+        b: 1,
+        c:''
+    }
+}
+// after sanitize
+{
+    a: 'Hello',
+    d: 'World',
+    e: {
+        b: 1
+    }
+}
+
+``` 
