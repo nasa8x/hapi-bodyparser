@@ -16,11 +16,12 @@ var register = function (server, options, next) {
             options = Object.assign({}, options, v.value);
         }
 
-        var mime = Content.type(request.headers['content-type']).mime;       
-        if (mime === 'multipart/form-data' || mime === 'application/x-www-form-urlencoded') {     
-            Parser.parse(request, options);
+        if(request.headers['content-type']) {
+            var mime = Content.type(request.headers['content-type']).mime;       
+            if (mime === 'multipart/form-data' || mime === 'application/x-www-form-urlencoded') {     
+                Parser.parse(request, options);
+            }
         }
-
         return reply.continue();
     });
 
