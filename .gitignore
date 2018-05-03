@@ -11,3 +11,4 @@ obj/*
 config.js
 **/env/prod.js
 note.txt
+tmp

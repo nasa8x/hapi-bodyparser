@@ -2,31 +2,32 @@
 var Content = require('content'),
     Parser = require('./parser');
 
-var register = function (server, options, next) {
-    var v = Parser.__SCHEMA.validate(options);
-    options = Object.assign({}, Parser.__DEFAULTS, v.value);
-    server.ext('onPostAuth', function (request, reply) {
-        if (request.method === 'get') {
-            return reply.continue();
-        }
-        
-        var opts = request.route.settings.plugins.body;
-        if (opts) {
-            v = Parser.__SCHEMA.validate(opts);
-            options = Object.assign({}, options, v.value);
-        }
+exports.plugin = {
+    register: (server, options) => {
 
-        var mime = Content.type(request.headers['content-type']).mime;       
-        if (mime === 'multipart/form-data' || mime === 'application/x-www-form-urlencoded') {     
-            Parser.parse(request, options);
-        }
+        var v = Parser.__SCHEMA.validate(options);
+        options = Object.assign({}, Parser.__DEFAULTS, v.value);
 
-        return reply.continue();
-    });
+        // decorate the request with a `body` property
+        server.decorate('request', 'body', function () { return {} }, { apply: true });
 
-    next();
-};
+        server.ext('onPostAuth', (request, h) => {
+            var type = request.headers['content-type'];
+            if (type && (/post|put|delete|patch|options/ig).test(request.method)) {
+                var opts = request.route.settings.plugins.body;
+                if (opts) {
+                    v = Parser.__SCHEMA.validate(opts);
+                    options = Object.assign({}, options, v.value);
+                }
 
-register.attributes = { pkg: require('../package.json') };
+                var mime = Content.type(type).mime;
+                if (mime === 'multipart/form-data' || mime === 'application/x-www-form-urlencoded') {
+                    Parser.parse(request, options);
+                }
+            }
 
-exports.register = register;
+            return h.continue;
+        });
+    },
+    pkg: require('../package.json')
+}

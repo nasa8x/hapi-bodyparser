@@ -31,6 +31,10 @@ module.exports = {
         return false;
     },
 
+    isEmptyObject: function (obj) {
+        return this.isObject(obj) && Object.keys(obj).length == 0;       
+    },
+
     isNullOrUndefined: function (s) {
         return s === null || s === undefined;
     },

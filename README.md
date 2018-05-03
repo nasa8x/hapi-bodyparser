@@ -53,7 +53,7 @@ Options can be configured on a route via the `body` plugin object.
 server.route({
   method: 'POST',
   path: '/api/post/fetch',
-  config: {
+  options: {
     plugins: {
       body: { merge: false, sanitizer: { stripNullorEmpty: false } }
     },
@@ -69,7 +69,7 @@ Parsing sub object for validate dynamic object keys name
 server.route({
         method: 'POST',
         path: '/api/post/fetch',
-        config: {
+        options: {
 
             auth: {
                 strategy: 'session',
@@ -132,7 +132,7 @@ With option `merge: true`, merge querystring into payload (body).
 server.route({
   method: 'POST',
   path: '/api/post/fetch?abc=1',
-  config: {
+  options: {
     plugins: {
       body: { merge: true }
     },
