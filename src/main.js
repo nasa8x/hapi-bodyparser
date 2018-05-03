@@ -3,6 +3,8 @@ var Content = require('content'),
     Parser = require('./parser');
 
 exports.plugin = {
+    name: 'bodyparser',
+    version: '2.0.1',
     register: (server, options) => {
 
         var v = Parser.__SCHEMA.validate(options);
