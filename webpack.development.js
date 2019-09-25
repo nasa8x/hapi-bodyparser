@@ -1,5 +1,4 @@
 var path = require('path');
-var webpack = require('webpack');
 var nodeExternals = require('webpack-node-externals');
 
 
@@ -10,16 +9,18 @@ module.exports = function (env) {
 
             mode: 'development',
             target: 'node',
+            devtool: '#source-map',
             node: {
                 __dirname: true,
                 __filename: true,
             },
             entry: {
 
-                'main': './src/main.js',
+                'index': './src/index.js',
 
             },
             output: {
+                libraryTarget: 'commonjs2',
                 path: path.join(__dirname, './dist'),
                 filename: '[name].js',
 

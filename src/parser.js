@@ -1,7 +1,7 @@
 'use strict';
 
-var Hoek = require('hoek'),
-    Joi = require('joi'),
+var Hoek = require('@hapi/hoek'),
+    Joi = require('@hapi/joi'),
     url = require('url'),
     qs = require('qs');
 

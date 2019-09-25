@@ -1,6 +1,6 @@
 
-var Hapi = require("hapi"),
-    Content = require('content')
+var Hapi = require("@hapi/hapi"),
+    Content = require('@hapi/content')
 
 
 
@@ -12,7 +12,7 @@ const server = Hapi.server({
 var init = async () => {
 
     await server.register([
-        { plugin: require('./main') }
+        { plugin: require('./dist/') }
     ]);
 
 

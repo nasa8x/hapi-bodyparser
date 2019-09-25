@@ -1,9 +1,16 @@
+# hapi-bodyparser
+
 Hapi.js body parsing plugin support merge querystring, sub objects and sanitizer.
 
 Parse incoming request bodies in a plugin before your handlers, available under the request.payload (body: true --> request.body) property.
 
+### If you don't know Node.js 
 
-Install via NPM
+[Node.js Tutorial for Beginners in 2020](https://morioh.com/p/0907cef2141c)
+
+[How To Build a Blog with Nest.js, MongoDB, and Vue.js](https://morioh.com/p/74ffc8a798bb)
+
+[Machine Learning In Node.js With TensorFlow.js](https://morioh.com/p/a517bc403340)
 
 ```js
 npm install hapi-bodyparser --save

@@ -1,10 +1,14 @@
 'use strict';
-var Content = require('content'),
-    Parser = require('./parser');
+var Content = require('@hapi/content'),    
+    Parser = require('./parser'),
+    pkg = require('../package.json');
+
+
 
 exports.plugin = {
-    name: 'bodyparser',
-    version: '2.0.1',
+    name: pkg.name,
+    version: pkg.version,
+    pkg: pkg,
     register: (server, options) => {
 
         var v = Parser.__SCHEMA.validate(options);
@@ -30,6 +34,6 @@ exports.plugin = {
 
             return h.continue;
         });
-    },
-    pkg: require('../package.json')
+    }
+    
 }
